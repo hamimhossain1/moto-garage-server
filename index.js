@@ -33,6 +33,16 @@ async function run() {
             const categoryList = await cursor.toArray();
             res.send(categoryList);
         })
+        
+        //... category products API ...//
+        app.get('/categoryProducts', async(req, res) => {
+            const query = {};
+            const cursor = products.find(query);
+            const categoryProducts = await cursor.toArray();
+            res.send(categoryProducts)
+        })
+
+        
 
 
 
