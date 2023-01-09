@@ -24,7 +24,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         const category = client.db('motoGarage').collection('category');
-        const products = client.db('motoGarage').collection('products');
+        const productsCollection = client.db('motoGarage').collection('products');
         const usersCollection = client.db('motoGarage').collection('users');
         
         //... home page category API ...//
@@ -40,10 +40,18 @@ async function run() {
             const name = req.params.name
             const query = {category : name};
             // const cursor = products.find(query);
-            const categoryProducts = await products.find(query).toArray()
+            const categoryProducts = await productsCollection.find(query).toArray()
             res.send(categoryProducts)
         })
         
+        //... add products API ...//
+        app.post('/products', async(req, res) => {
+            const products = req.body;
+            const result = await productsCollection.insertOne(products)
+            res.send(result)
+        })
+
+
         //... category products API ...//
         app.post('/users', async(req, res)=>{
             const users= req.body;
