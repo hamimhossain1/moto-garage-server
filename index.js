@@ -25,6 +25,7 @@ async function run() {
     try {
         const category = client.db('motoGarage').collection('category');
         const products = client.db('motoGarage').collection('products');
+        const usersCollection = client.db('motoGarage').collection('users');
         
         //... home page category API ...//
         app.get('/category', async(req, res) => {
@@ -35,14 +36,20 @@ async function run() {
         })
         
         //... category products API ...//
-        app.get('/categoryProducts', async(req, res) => {
-            const query = {};
-            const cursor = products.find(query);
-            const categoryProducts = await cursor.toArray();
+        app.get('/categoryProducts/:name', async(req, res) => {
+            const name = req.params.name
+            const query = {category : name};
+            // const cursor = products.find(query);
+            const categoryProducts = await products.find(query).toArray()
             res.send(categoryProducts)
         })
-
         
+        //... category products API ...//
+        app.post('/users', async(req, res)=>{
+            const users= req.body;
+            const result = await usersCollection.insertOne(users)
+            res.send(result)
+        });
 
 
 
