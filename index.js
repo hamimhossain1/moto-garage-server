@@ -62,6 +62,23 @@ async function run() {
 
 
 
+        // testttttttttttttttttttttttttt//
+        //--- api by email for my review---//
+        app.get('/myProducts', async(req, res) => {
+            let query = {}
+            if(req.query.email){
+                query = {
+                    email: req.query.email
+                }
+            }
+            const cursor = productsCollection.find(query);
+            const myProductsAll = await cursor.toArray();
+            res.send(myProductsAll);
+        })
+
+
+
+
 
     }
     finally{
