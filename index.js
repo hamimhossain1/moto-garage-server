@@ -26,6 +26,7 @@ async function run() {
         const category = client.db('motoGarage').collection('category');
         const productsCollection = client.db('motoGarage').collection('products');
         const usersCollection = client.db('motoGarage').collection('users');
+        const modalDataCollection = client.db('motoGarage').collection('modalData')
         
         //... home page category API ...//
         app.get('/category', async(req, res) => {
@@ -58,7 +59,13 @@ async function run() {
             const result = await usersCollection.insertOne(users)
             res.send(result)
         });
-
+        
+        //... modal data API ...//
+        app.post('/modalData', async(req, res) => {
+            const information = req.body;
+            const result = await modalDataCollection.insertOne(information);
+            res.send(result)
+        })
 
 
 
@@ -74,6 +81,19 @@ async function run() {
             const cursor = productsCollection.find(query);
             const myProductsAll = await cursor.toArray();
             res.send(myProductsAll);
+        })
+
+
+        app.get('/myProductsList', async(req, res) => {
+            let query = {}
+            if(req.query.email){
+                query = {
+                    email: req.query.email
+                }
+            }
+            const cursor = productsCollection.find(query);
+            const userReviewByEmail = await cursor.toArray();
+            res.send(userReviewByEmail);
         })
 
 
