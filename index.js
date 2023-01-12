@@ -1,7 +1,9 @@
 const express = require('express');
-require('dotenv').config();
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+require('dotenv').config();
+
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -27,6 +29,13 @@ async function run() {
         const productsCollection = client.db('motoGarage').collection('products');
         const usersCollection = client.db('motoGarage').collection('users');
         const modalDataCollection = client.db('motoGarage').collection('modalData')
+
+        //... JWT API ...//
+        app.post('/jwt', (req, res) => {
+            const user = req.body;
+            const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '7d'})
+            res.send({token})
+        })
         
         //... home page category API ...//
         app.get('/category', async(req, res) => {
