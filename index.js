@@ -1,7 +1,7 @@
 const express = require('express');
 require('dotenv').config();
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -66,35 +66,38 @@ async function run() {
             const result = await modalDataCollection.insertOne(information);
             res.send(result)
         })
-
-
-
-        // testttttttttttttttttttttttttt//
-        //--- api by email for my review---//
+        
+        // --- api by myProducts for my review---//
         app.get('/myProducts', async(req, res) => {
             let query = {}
-            if(req.query.email){
-                query = {
-                    email: req.query.email
-                }
-            }
             const cursor = productsCollection.find(query);
             const myProductsAll = await cursor.toArray();
             res.send(myProductsAll);
         })
 
-
-        app.get('/myProductsList', async(req, res) => {
-            let query = {}
-            if(req.query.email){
-                query = {
-                    email: req.query.email
-                }
-            }
-            const cursor = productsCollection.find(query);
-            const userReviewByEmail = await cursor.toArray();
-            res.send(userReviewByEmail);
+        // ... delete data from my products API ...//
+        app.delete('/myProducts/:id', async(req, res) =>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await productsCollection.deleteOne(query);
+            res.send(result);
         })
+
+
+        
+        
+        // testttttttttttttttttttttttttt//
+        // app.get('/myProductsList', async(req, res) => {
+        //     let query = {}
+        //     if(req.query.email){
+        //         query = {
+        //             email: req.query.email
+        //         }
+        //     }
+        //     const cursor = productsCollection.find(query);
+        //     const userReviewByEmail = await cursor.toArray();
+        //     res.send(userReviewByEmail);
+        // })
 
 
 
